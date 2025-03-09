@@ -1,0 +1,13 @@
+college-placement-chatbot/
+├── app.py
+├── templates/
+│   └── index.html
+├── static/
+│   └── css/
+│       └── style.css
+├── data/
+│   └── job_placement.csv
+├── requirements.txt
+├── README.md
+├── .gitignore
+└── LICENSE
