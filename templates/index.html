@@ -5,130 +5,350 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>College Placement Chatbot</title>
     <style>
-        /* General Styles */
+        /* Enhanced Chatbot Styles */
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(to right, #6a11cb, #2575fc);
-            color: #333;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .chat-container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            height: 85vh;
+        }
+
+        .chat-header {
+            background-color: #007bff;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .chat-header h1 {
+            font-size: 1.5em;
+            margin: 0;
+        }
+
+        .clear-button {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: all 0.2s ease;
+        }
+
+        .clear-button:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .chat-body {
             padding: 20px;
-            max-width: 700px;
-            margin: auto;
+            overflow-y: auto;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: calc(85vh - 160px);
         }
 
-        h1 {
-            text-align: center;
-            color: #fff;
-            font-size: 2em;
+        .message-container {
             margin-bottom: 20px;
-        }
-
-        /* Form Styles */
-        form {
-            background: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            margin-bottom: 20px;
-        }
-
-        textarea {
             width: 100%;
-            height: 120px;
-            padding: 15px;
-            border: 1px solid #ddd;
+        }
+
+        .message {
+            color: #212529;
             border-radius: 8px;
-            resize: none;
+            padding: 10px 15px;
+            width: fit-content;
+            max-width: 80%;
             font-size: 16px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            line-height: 1.5;
+            position: relative;
+        }
+
+        .user-message {
+            background-color: #ccf3ff;
+            align-self: flex-end;
+            color: #004085;
+            margin-left: auto;
+        }
+
+        .bot-message {
+            background-color: #f8f9fa;
+            align-self: flex-start;
+        }
+
+        .message strong {
+            font-weight: bold;
+        }
+
+        .message-time {
+            font-size: 0.7em;
+            color: #6c757d;
+            margin-top: 5px;
+            text-align: right;
+        }
+
+        .model-badge {
+            position: absolute;
+            top: -8px;
+            right: 10px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            padding: 2px 8px;
+            font-size: 0.7em;
+            color: #666;
+        }
+
+        .input-area {
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+        }
+
+        .model-area {
+            padding: 10px 15px;
+            background-color: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #user_input {
+            flex-grow: 1;
+            padding: 12px;
+            border: 1px solid #ced4da;
+            border-radius: 20px;
+            font-size: 16px;
+            margin-right: 10px;
+            resize: none;
+            height: 20px;
         }
 
         button {
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 8px;
-            background-color: #4CAF50;
+            background-color: #007bff;
             color: white;
-            font-size: 18px;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.2s ease-in-out;
         }
 
         button:hover {
-            background-color: #45a049;
+            background-color: #0056b3;
         }
 
-        /* Response Styles */
-        .response-container {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
         }
 
-        .response {
-            margin-top: 20px;
+        .model-selector {
+            display: flex;
+            align-items: center;
         }
 
-        .response h3 {
-            color: #4CAF50;
-        }
-
-        .question {
+        .model-selector label {
+            margin-right: 10px;
             font-weight: bold;
-            color: #333;
-            margin-bottom: 5px;
+            color: #495057;
         }
 
-        .answer {
-            background-color: #f9f9f9;
-            padding: 10px;
-            border-radius: 5px;
-            border-left: 4px solid #4CAF50;
+        .model-selector select {
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+            width: auto;
         }
 
-        /* Footer */
-        footer {
+        .model-info {
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            margin-left: 10px;
+            border: 3px solid rgba(0, 123, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #007bff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Empty state */
+        .empty-state {
             text-align: center;
-            margin-top: 20px;
-            color: #fff;
+            color: #6c757d;
+            margin-top: auto;
+            margin-bottom: auto;
+            padding: 30px;
         }
 
-        @media (max-width: 600px) {
-            button {
-                font-size: 16px;
-            }
+        .empty-state i {
+            font-size: 3em;
+            margin-bottom: 15px;
+            color: #dee2e6;
+        }
 
-            textarea {
-                font-size: 14px;
-            }
+        /* Scrollbar Styling */
+        .chat-body::-webkit-scrollbar {
+            width: 8px;
+        }
 
-            h1 {
-                font-size: 1.5em;
-            }
+        .chat-body::-webkit-scrollbar-track {
+            background-color: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .chat-body::-webkit-scrollbar-thumb {
+            background-color: #aaa;
+            border-radius: 4px;
+        }
+
+        .chat-body::-webkit-scrollbar-thumb:hover {
+            background-color: #888;
+        }
+
+        /* Pre-formatted text */
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            background-color: #f8f9fa;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            padding: 10px;
+            overflow-x: auto;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
-    <h1>College Placement Chatbot</h1>
-    <form method="POST" action="/">
-        <textarea name="user_input" placeholder="Ask the chatbot a question..." required></textarea>
-        <button type="submit">Submit</button>
-    </form>
-
-    {% if user_input %}
-    <div class="response-container">
-        <div class="response">
-            <h3>Your Question:</h3>
-            <div class="question">{{ user_input }}</div>
-            <h3>Chatbot Response:</h3>
-            <div class="answer">{{ response }}</div>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>College Placement Chatbot</h1>
+            <button id="clear-history" class="clear-button">Clear Chat</button>
+        </div>
+        <div class="chat-body" id="chat-log">
+            {% if chat_history %}
+                {% for msg in chat_history %}
+                    <div class="message-container">
+                        <div class="message user-message">
+                            <strong>You:</strong> {{ msg.user }}
+                        </div>
+                    </div>
+                    <div class="message-container">
+                        <div class="message bot-message">
+                            <div class="model-badge">{{ models[msg.model].description }}</div>
+                            <strong>Bot:</strong> {{ msg.bot }}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <p>Ask a question about college placement data.</p>
+                    <p>Try questions like:</p>
+                    <ul style="text-align: left; width: fit-content; margin: 0 auto;">
+                        <li>Who has the highest salary?</li>
+                        <li>What is the average GPA?</li>
+                        <li>How many students were placed?</li>
+                        <li>Who has the most experience?</li>
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+        <div class="model-area">
+            <div class="model-selector">
+                <label for="model_choice">Model:</label>
+                <select name="model_choice" id="model_choice">
+                    {% for model_id, model_info in models.items() %}
+                    <option value="{{ model_id }}" {% if model_id == selected_model %}selected{% endif %}>
+                        {{ model_info.description }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="model-info" id="model-status">
+                Ready
+            </div>
+        </div>
+        <div class="input-area">
+            <form method="POST" action="/" id="chat-form" style="flex-grow: 1; display: flex; align-items: center;">
+                <textarea id="user_input" name="user_input" placeholder="Ask a question..." required></textarea>
+                <input type="hidden" name="model_choice" id="model_choice_hidden" value="{{ selected_model }}">
+                <button type="submit" id="submit-btn">Send</button>
+                <div class="spinner" id="loading-spinner"></div>
+            </form>
         </div>
     </div>
-    {% endif %}
 
-    <footer>
-        <p>Project by PCCE IT DEPT | © 2024 College Placement Bot</p>
-    </footer>
+    <script>
+        // Scroll chat to bottom
+        function scrollToBottom() {
+            const chatLog = document.getElementById('chat-log');
+            if (chatLog) {
+                chatLog.scrollTop = chatLog.scrollHeight;
+            }
+        }
+        scrollToBottom();
+
+        // Update hidden model field when selection changes
+        document.getElementById('model_choice').addEventListener('change', function() {
+            document.getElementById('model_choice_hidden').value = this.value;
+        });
+
+        // Show loading spinner during form submission
+        document.getElementById('chat-form').addEventListener('submit', function() {
+            document.getElementById('loading-spinner').style.display = 'block';
+            document.getElementById('submit-btn').disabled = true;
+            document.getElementById('model-status').innerText = 'Processing...';
+        });
+
+        // Auto-expand textarea
+        const textarea = document.getElementById('user_input');
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight < 100) ? 
+                Math.max(20, this.scrollHeight) + 'px' : '100px';
+        });
+
+        // Clear chat history
+        document.getElementById('clear-history').addEventListener('click', function() {
+            fetch('/clear', { method: 'POST' })
+                .then(() => {
+                    window.location.reload();
+                });
+        });
+    </script>
 </body>
 </html>
